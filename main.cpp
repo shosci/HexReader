@@ -49,8 +49,7 @@ char GetPrintChar(char c) noexcept
 int main()
 {
     std::vector<char> curLine;
-    int i = 0;
-    for(; i < 512; i++)
+    for(int i = 0; i < 512; i++)
     {
         std::cout << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << i % 256 << ' ';
         curLine.push_back(GetPrintChar(static_cast<char>(i)));
