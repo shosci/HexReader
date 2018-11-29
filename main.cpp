@@ -39,6 +39,8 @@
 
 #include <vector>
 
+#include <fstream>
+
 char GetPrintChar(char c) noexcept
 {
     if(('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z'))
@@ -46,7 +48,7 @@ char GetPrintChar(char c) noexcept
     return '.';
 }
 
-int main()
+void PrintExample() noexcept
 {
     std::vector<char> curLine;
     for(int i = 0; i < 512; i++)
@@ -66,6 +68,15 @@ int main()
             } 
             std::cout << std::endl;
         }
+    }
+}
+
+int main(int argc, char* argv[])
+{
+    std::cout << "argc: " << argc << std::endl;
+    for(int i=0; i < argc; i++)
+    {
+        std::cout << "argv[" << i << "]: " << argv[i] << std::endl;
     }
 
     std::cout << std::endl << std::endl;
