@@ -6,9 +6,10 @@
         {
             "label": "compile",
             "type": "shell",
-            "command": "${workspaceFolder}/compile.bat",
+            "command": "${workspaceFolder}/Build/compile.bat",
             "args": [
-                "${workspaceFolder}/*.cpp"
+                "@${workspaceFolder}/Build/sources",
+                "/FeHexReader.exe"
             ],
             "group": {
                 "kind": "build",

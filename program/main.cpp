@@ -35,41 +35,10 @@
 */
 
 #include <iostream>
-#include <iomanip>
-
-#include <vector>
-
 #include <fstream>
+#include <type_traits>
 
-char GetPrintChar(char c) noexcept
-{
-    if(('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z'))
-        return c;
-    return '.';
-}
-
-void PrintExample() noexcept
-{
-    std::vector<char> curLine;
-    for(int i = 0; i < 512; i++)
-    {
-        std::cout << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << i % 256 << ' ';
-        curLine.push_back(GetPrintChar(static_cast<char>(i)));
-        if((i + 1) % 16 == 0)
-        {
-            if(!curLine.empty())
-            {
-                std::cout << '\t';
-                for(const char& c : curLine )
-                {
-                    std::cout << c;
-                }
-                curLine.clear();
-            } 
-            std::cout << std::endl;
-        }
-    }
-}
+#include "..\Util\FileType.h"
 
 int main(int argc, char* argv[])
 {
@@ -78,6 +47,16 @@ int main(int argc, char* argv[])
     {
         std::cout << "argv[" << i << "]: " << argv[i] << std::endl;
     }
+
+    if(argc < 2)
+    {
+        std::cout << "Please provide file path" << std::endl;
+        return -1;
+    }
+
+    std::string filePath(argv[1]);
+
+    std::cout << "File type: " << static_cast<std::underlying_type<HexReader::FileType>::type>(HexReader::GetFileType(filePath)) << std::endl;
 
     std::cout << std::endl << std::endl;
     std::cout << "Press any key to exit...";
