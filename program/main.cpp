@@ -39,6 +39,7 @@
 #include <type_traits>
 
 #include "..\Util\FileType.h"
+#include "..\Util\DiskUtil.h"
 
 int main(int argc, char* argv[])
 {
@@ -57,6 +58,12 @@ int main(int argc, char* argv[])
     std::string filePath(argv[1]);
 
     std::cout << "File type: " << static_cast<std::underlying_type<HexReader::FileType>::type>(HexReader::GetFileType(filePath)) << std::endl;
+
+    auto drives = HexReader::GetLocalPhysicalDrives();
+    for(auto drive : drives)
+    {
+        std::wcout << drive << std::endl;
+    }
 
     std::cout << std::endl << std::endl;
     std::cout << "Press any key to exit...";
