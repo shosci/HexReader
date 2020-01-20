@@ -1,0 +1,4 @@
+# Ignore all build generated files
+Bin/
+Obj/
+**/*.pdb
