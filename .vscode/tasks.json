@@ -6,11 +6,7 @@
         {
             "label": "compile",
             "type": "shell",
-            "command": "${workspaceFolder}/Build/compile.bat",
-            "args": [
-                "@${workspaceFolder}/Build/sources",
-                "/FeHexReader.exe"
-            ],
+            "command": "${workspaceFolder}/Build/build.bat",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -23,7 +19,7 @@
         {
             "label": "run",
             "type": "shell",
-            "command": "${workspaceFolder}/main.exe",
+            "command": "${workspaceFolder}/Bin/HexReader.exe",
             "presentation": {
                 "reveal": "always"
             }

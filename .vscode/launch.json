@@ -8,12 +8,12 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/HexReader.exe",
+            "program": "${workspaceFolder}/Bin/HexReader.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/Bin",
             "environment": [],
-            "externalConsole": true
+            "externalConsole": true,
         }
     ]
 }

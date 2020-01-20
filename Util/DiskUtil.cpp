@@ -18,16 +18,16 @@ namespace HexReader
 {
     std::vector<std::wstring> GetLocalLogicalDrives() noexcept
     {
-        std::vector<std::wstring> drives;
-        wchar_t tmpb[1];
-        auto strLength = GetLogicalDriveStringsW(512, tmpb);
+        std::vector<std::wstring> drives {};
+        wchar_t tmpb[1] { L'\0' };
+        auto strLength = GetLogicalDriveStringsW(1, tmpb);
         if(strLength == 0)
         {
             std::cout << "GetLogicalDriveStringsW failed to get needed buffer length" << std::endl;
             return drives;
         }
         
-        int neededLength = strLength + 1;
+        int neededLength = strLength;
         wchar_t* buffer = new wchar_t[neededLength];
         strLength = GetLogicalDriveStringsW(neededLength, buffer);
         if(strLength == 0)
@@ -166,11 +166,11 @@ namespace HexReader
             }
 
             std::wstring devicePath = pDeviceInterfaceDetailData->GetDevicePath();
-            std::wcout << "DevicePath from DeviceInterfaceDetailData: " << devicePath << std::endl;
+            // std::wcout << "DevicePath from DeviceInterfaceDetailData: " << devicePath << std::endl;
 
-            HANDLE diskHandle = CreateFile( pDeviceInterfaceDetailData->GetDevicePath(), // lpFileName
-                                            GENERIC_READ,                                // dwDesiredAccess
-                                            FILE_SHARE_READ,                             // dwShareMode
+            HANDLE diskHandle = CreateFileW( pDeviceInterfaceDetailData->GetDevicePath(), // lpFileName
+                                            0,                                // dwDesiredAccess
+                                            FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,                            // dwShareMode
                                             NULL,                                        // lpSecurityAttributes
                                             OPEN_EXISTING,                               // dwCreationDisposition
                                             FILE_ATTRIBUTE_NORMAL,                       // dwFlagsAndAttributes
@@ -204,7 +204,7 @@ namespace HexReader
                 return drives;
             }
 
-            std::cout << "DeviceType: " << deviceNumber.DeviceType << ";\tDeviceNumber: " << deviceNumber.DeviceNumber << ";\tPartitionNumber: " << deviceNumber.PartitionNumber << std::endl;
+            // std::cout << "DeviceType: " << deviceNumber.DeviceType << ";\tDeviceNumber: " << deviceNumber.DeviceNumber << ";\tPartitionNumber: " << deviceNumber.PartitionNumber << std::endl;
 
             drives.push_back(std::wstring(L"\\\\.\\PhysicalDrive") + std::to_wstring(deviceNumber.DeviceNumber));
 

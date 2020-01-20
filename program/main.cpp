@@ -34,6 +34,8 @@
 *      F0 F1 F2 F3 F4 F5 F6 F7 F8 F9 FA FB FC FD FE FF         ................
 */
 
+#include <windows.h>
+
 #include <iostream>
 #include <fstream>
 #include <type_traits>
@@ -43,24 +45,13 @@
 
 int main(int argc, char* argv[])
 {
-    std::cout << "argc: " << argc << std::endl;
-    for(int i=0; i < argc; i++)
-    {
-        std::cout << "argv[" << i << "]: " << argv[i] << std::endl;
-    }
+    auto logicalDrives = HexReader::GetLocalLogicalDrives();
 
-    if(argc < 2)
-    {
-        std::cout << "Please provide file path" << std::endl;
-        return -1;
-    }
+    for(auto drive : logicalDrives)
+        std::wcout << L"Drive: " << drive << std::endl;
 
-    std::string filePath(argv[1]);
-
-    std::cout << "File type: " << static_cast<std::underlying_type<HexReader::FileType>::type>(HexReader::GetFileType(filePath)) << std::endl;
-
-    auto drives = HexReader::GetLocalPhysicalDrives();
-    for(auto drive : drives)
+    auto physicalDrives = HexReader::GetLocalPhysicalDrives();
+    for(auto drive : physicalDrives)
     {
         std::wcout << drive << std::endl;
     }
