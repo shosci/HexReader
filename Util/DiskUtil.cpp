@@ -4,7 +4,10 @@
 
 #include <windows.h>
 #include <fileapi.h>
+
+#include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <wchar.h>
 
 #include <setupapi.h>
@@ -16,6 +19,9 @@
 
 namespace HexReader
 {
+    //
+    // logic drive is in form of C:, D:, etc, no trailing backslash
+    //
     std::vector<std::wstring> GetLocalLogicalDrives() noexcept
     {
         std::vector<std::wstring> drives {};
@@ -35,6 +41,8 @@ namespace HexReader
             std::cout << "GetLogicalDriveStringsW failed to get drive strings" << std::endl;
             return drives;
         }
+
+        // buffer would be in form of "C:\NULLD:\NULLNULL"
         wchar_t* sentinal = &buffer[neededLength-1];
         wchar_t* bufcpy = buffer;
         while(bufcpy <= sentinal)
@@ -42,8 +50,12 @@ namespace HexReader
             auto itemStrLength = wcslen(bufcpy);
             if(itemStrLength == 0)
                 break;
-            
-            drives.push_back(std::wstring(bufcpy));
+
+            if(bufcpy[itemStrLength-1] == L'\\')            
+                drives.push_back(std::wstring(bufcpy, itemStrLength-1));
+            else
+                drives.push_back(std::wstring(bufcpy));
+
             bufcpy += itemStrLength+1;
         }
 
@@ -212,6 +224,76 @@ namespace HexReader
             diskHandle = INVALID_HANDLE_VALUE;
         }
 
+        std::sort(drives.begin(), drives.end());
         return drives;
+    }
+
+    //
+    // logicalDrive should be in form of "C:" or  Or "\\.\D:"
+    //
+    // return PhycicalDrive string in form of \\.\PhysicalDriveNUM
+    std::wstring GetPhysicalDriveForLogicalDrive(const std::wstring& logicalDrive) noexcept
+    {
+        if(logicalDrive.size() == 0)
+        {
+            std::cout << "logicalDrive should not be empty " << std::endl;
+            return {};
+        }
+
+        std::wstring nomalizedLogicalDrive;
+        if(logicalDrive.substr(0,1) == L"\\")
+            nomalizedLogicalDrive = logicalDrive;
+        else
+            nomalizedLogicalDrive = L"\\\\.\\" + logicalDrive;
+
+        HANDLE hDevice = INVALID_HANDLE_VALUE;    // handle to the drive to be examined 
+        BOOL bResult   = FALSE;                   // results flag
+        DWORD junk     = 0;                       // discard results
+
+        hDevice = CreateFileW( nomalizedLogicalDrive.c_str(),
+                                0,                // no access to the drive
+                                FILE_SHARE_READ | // share mode
+                                FILE_SHARE_WRITE, 
+                                NULL,             // default security attributes
+                                OPEN_EXISTING,    // disposition
+                                0,                // file attributes
+                                NULL);            // do not copy file attributes
+
+        if (hDevice == INVALID_HANDLE_VALUE)    // cannot open the drive
+        {
+            std::cout << "CreateFileW failed " << std::endl;
+            return {};
+        }
+
+        VOLUME_DISK_EXTENTS vde;
+        bResult = DeviceIoControl( hDevice,
+                                   IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS,
+                                   NULL /*lpInBuffer*/, 
+                                   0 /*nInBufferSize*/,    
+                                   &vde,
+                                   sizeof(vde),
+                                   &junk,
+                                   (LPOVERLAPPED) NULL /*lpOverlapped*/);
+
+        CloseHandle(hDevice);
+
+        if(bResult == 0)
+        {
+            std::cout << "DeviceIoControl failed " << std::endl;
+            return {};
+        }
+        
+        if(vde.NumberOfDiskExtents <= 0)
+        {
+            std::wcout << L"There is no disk extents for drive: " << logicalDrive << std::endl;
+            return {};
+        }
+
+        DISK_EXTENT fstExt = vde.Extents[0];
+
+        std::wostringstream woss;
+        woss << L"\\\\.\\PhysicalDrive" << fstExt.DiskNumber;
+
+        return woss.str();
     }
 }

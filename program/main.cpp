@@ -48,17 +48,10 @@ int main(int argc, char* argv[])
     auto logicalDrives = HexReader::GetLocalLogicalDrives();
 
     for(auto drive : logicalDrives)
-        std::wcout << L"Drive: " << drive << std::endl;
-
-    auto physicalDrives = HexReader::GetLocalPhysicalDrives();
-    for(auto drive : physicalDrives)
     {
-        std::wcout << drive << std::endl;
+        std::wcout << L"Volume: " << drive << std::endl;
+        std::wcout << L"PhysicalDrive: " << HexReader::GetPhysicalDriveForLogicalDrive(drive) << std::endl;       
     }
-
-    std::cout << std::endl << std::endl;
-    std::cout << "Press any key to exit...";
-    std::cin.get();
 
     return 0;
 }
