@@ -12,7 +12,10 @@ $(OBJ)\main.obj : $(ROOTDIR)\Program\main.cpp
 $(OBJ)\DiskUtil.obj : $(ROOTDIR)\Util\DiskUtil.cpp
 	cl -c -Zi -EHsc -Fo$(OBJ)\ $**
 
-$(BIN)\HexReader.exe : $(OBJ)\main.obj $(OBJ)\DiskUtil.obj
+$(OBJ)\HexPrinter.obj : $(ROOTDIR)\Util\HexPrinter.cpp
+	cl -c -Zi -EHsc -Fo$(OBJ)\ $**
+
+$(BIN)\HexReader.exe : $(OBJ)\main.obj $(OBJ)\DiskUtil.obj $(OBJ)\HexPrinter.obj
   link -debug -out:$@ $**
 
 # create build dirs

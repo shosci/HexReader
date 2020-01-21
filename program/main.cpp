@@ -34,24 +34,35 @@
 *      F0 F1 F2 F3 F4 F5 F6 F7 F8 F9 FA FB FC FD FE FF         ................
 */
 
+#include "..\Util\DiskUtil.h"
+#include "..\Util\FileType.h"
+#include "..\Util\HexPrinter.h"
+
 #include <windows.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <type_traits>
-
-#include "..\Util\FileType.h"
-#include "..\Util\DiskUtil.h"
 
 int main(int argc, char* argv[])
 {
-    auto logicalDrives = HexReader::GetLocalLogicalDrives();
+    // auto logicalDrives = HexReader::GetLocalLogicalDrives();
 
-    for(auto drive : logicalDrives)
-    {
-        std::wcout << L"Volume: " << drive << std::endl;
-        std::wcout << L"PhysicalDrive: " << HexReader::GetPhysicalDriveForLogicalDrive(drive) << std::endl;       
-    }
+    // for(auto drive : logicalDrives)
+    // {
+    //     std::wcout << L"Volume: " << drive << std::endl;
+    //     std::wcout << L"PhysicalDrive: " << HexReader::GetPhysicalDriveForLogicalDrive(drive) << std::endl;       
+    // }
+
+    constexpr uint32_t size = 512;
+    HexReader::BYTE bytes[size] {0};
+    int i{0};
+    for(auto& b: bytes)
+        b = i++;
+
+    HexReader::PrettyPrint(bytes, size);
+
+    std::cout << std::endl;
 
     return 0;
 }
