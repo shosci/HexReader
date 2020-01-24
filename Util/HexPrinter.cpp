@@ -13,7 +13,7 @@ namespace HexReader
         return '.';
     }
 
-    void PrettyPrint(BYTE* pBytes, uint32_t size) noexcept
+    void PrettyPrint(unsigned char* pBytes, uint32_t size) noexcept
     {
         std::vector<char> curLine;
         for(int i = 0; i < size; i++)

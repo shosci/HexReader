@@ -4,8 +4,5 @@
 
 namespace HexReader
 {
-
-    using BYTE = char;
-    void PrettyPrint(BYTE* pBytes, uint32_t size) noexcept;
-
+    void PrettyPrint(unsigned char* pBytes, uint32_t size) noexcept;
 }

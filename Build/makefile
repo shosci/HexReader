@@ -15,7 +15,10 @@ $(OBJ)\DiskUtil.obj : $(ROOTDIR)\Util\DiskUtil.cpp
 $(OBJ)\HexPrinter.obj : $(ROOTDIR)\Util\HexPrinter.cpp
 	cl -c -Zi -EHsc -Fo$(OBJ)\ $**
 
-$(BIN)\HexReader.exe : $(OBJ)\main.obj $(OBJ)\DiskUtil.obj $(OBJ)\HexPrinter.obj
+$(OBJ)\DiskReader.obj : $(ROOTDIR)\Readers\DiskReader.cpp
+	cl -c -Zi -EHsc -Fo$(OBJ)\ $**
+
+$(BIN)\HexReader.exe : $(OBJ)\main.obj $(OBJ)\DiskUtil.obj $(OBJ)\HexPrinter.obj $(OBJ)\DiskReader.obj
   link -debug -out:$@ $**
 
 # create build dirs

@@ -35,8 +35,9 @@
 */
 
 #include "..\Util\DiskUtil.h"
-#include "..\Util\FileType.h"
-#include "..\Util\HexPrinter.h"
+// #include "..\Util\FileType.h"
+// #include "..\Util\HexPrinter.h"
+#include "..\Readers\DiskReader.h"
 
 #include <windows.h>
 
@@ -44,7 +45,7 @@
 #include <iostream>
 #include <type_traits>
 
-int main(int argc, char* argv[])
+int main(int argc, wchar_t* argv[])
 {
     // auto logicalDrives = HexReader::GetLocalLogicalDrives();
 
@@ -54,15 +55,57 @@ int main(int argc, char* argv[])
     //     std::wcout << L"PhysicalDrive: " << HexReader::GetPhysicalDriveForLogicalDrive(drive) << std::endl;       
     // }
 
-    constexpr uint32_t size = 512;
-    HexReader::BYTE bytes[size] {0};
-    int i{0};
-    for(auto& b: bytes)
-        b = i++;
+    // constexpr uint32_t size = 512;
+    // HexReader::BYTE bytes[size] {0};
+    // int i{0};
+    // for(auto& b: bytes)
+    //     b = i++;
 
-    HexReader::PrettyPrint(bytes, size);
+    // HexReader::PrettyPrint(bytes, size);
 
-    std::cout << std::endl;
+    // std::cout << std::endl;
+
+    // for(int i=0; i<argc; i++)
+    //     std::cout << std::string(argv[i]) << std::endl;
+    //
+    // output:
+    // D:\Projects\HexReader>Bin\HexReader.exe arg1 arg2 arg3
+    // Bin\HexReader.exe
+    // arg1
+    // arg2
+    // arg3
+
+    std::wstring filePath;
+    if(argc < 2)
+    {
+        std::cout << "HexReader: " << std::endl
+            << "\t\tYou can use this tool to read a file or device in bytes with Hex Format" << std::endl
+            << "\t\tIf it's a file, put its absolute file path." << std::endl
+            << "\t\tIf it's a device, just put its volume char and end with colon(no backslash), like: C:, D: or E:" << std::endl
+            << std::endl
+            << "Please input your file or device:";
+        
+        std::wcin >> filePath;
+    }
+    else
+    {
+        filePath = argv[1];
+    }
+
+    std::wcout << L"Opening: " << filePath << L" ..." << std::endl;
+
+    HexReader::DiskReader dr(HexReader::GetPhysicalDriveForLogicalDrive(filePath));
+
+    while(std::getchar() != 'q')
+    {
+        if(dr.PrintNext(512))
+            std::wcout << std::endl << L"Press q to quit, any key to continue: " << std::endl;
+        else
+        {
+            std::wcout << L"EOF..." << std::endl;
+            break;
+        }
+    }
 
     return 0;
 }
