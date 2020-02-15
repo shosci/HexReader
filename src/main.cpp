@@ -34,10 +34,8 @@
 *      F0 F1 F2 F3 F4 F5 F6 F7 F8 F9 FA FB FC FD FE FF         ................
 */
 
-#include "..\Util\DiskUtil.h"
-// #include "..\Util\FileType.h"
-// #include "..\Util\HexPrinter.h"
-#include "..\Readers\DiskReader.h"
+#include "DiskUtil.h"
+#include "DiskReader.h"
 
 #include <windows.h>
 

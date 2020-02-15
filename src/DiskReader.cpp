@@ -1,6 +1,6 @@
 #include "DiskReader.h"
 
-#include "..\Util\HexPrinter.h"
+#include "HexPrinter.h"
 
 #include <algorithm>
 #include <exception>
